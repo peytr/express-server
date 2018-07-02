@@ -17,3 +17,28 @@ app.use(function(req, res, next){
     next();  
 })
 
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended:true}));
+app.use(express.static(path.join(__dirname, 'public')));
+
+const port = process.env.PORT || 3001;
+
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/mern-todo-app', {
+    useMongoClient: true,
+});
+
+app.use('/api, todoRoutes');
+
+app.get('/', (req, res) => {
+    return res.end('Api working');
+})
+
+app.use((req, res, next) => {
+    res.status(404).send('<h2 align=center>Page Not Found!</h2>');
+});
+
+app.listen(port,() => {
+    console.log(`App Server Listening at ${port}`);
+});
